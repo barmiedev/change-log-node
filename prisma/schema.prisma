@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,4 +5,64 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  username  String    @unique
+  password  String
+  createdAt DateTime  @default(now())
+  products  Product[]
+}
+
+model Product {
+  id         String    @id @default(uuid())
+  name       String    @db.VarChar(255)
+  createdAt  DateTime  @default(now())
+  belongsTo  User      @relation(fields: [belongToId], references: [id])
+  belongToId String
+  releases   Release[]
+}
+
+enum RELEASE_STATUSES {
+  IN_PROGRESS
+  SHIPPED
+  DEPRECATED
+}
+
+model Release {
+  id        String           @id @default(uuid())
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  // Product
+  productId String
+  product   Product          @relation(fields: [productId], references: [id])
+  // Details
+  title     String
+  body      String
+  status    RELEASE_STATUSES @default(IN_PROGRESS)
+  version   String?
+  asset     String?
+  updates   Update[]
+}
+
+enum UPDATE_TYPES {
+  BUG_FIX
+  NEW_FEATURE
+  IMPROVEMENT
+  DEPRECATION
+  SECURITY_FIX
+}
+
+model Update {
+  id          String       @id @default(uuid())
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  // Release
+  releaseId   String
+  release     Release      @relation(fields: [releaseId], references: [id])
+  // Details
+  name        String
+  description String
+  type        UPDATE_TYPES
 }
