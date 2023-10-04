@@ -16,6 +16,9 @@ export const getReleases = async (req, res) => {
         belongToId: req.user.id,
       },
     },
+    include: {
+      updates: true,
+    },
   });
 
   res.json({
@@ -34,6 +37,9 @@ export const getRelease = async (req, res) => {
       product: {
         belongToId: req.user.id,
       },
+    },
+    include: {
+      updates: true,
     },
   });
 
