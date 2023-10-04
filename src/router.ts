@@ -15,6 +15,13 @@ import {
   getReleases,
   updateRelease,
 } from "./handlers/release";
+import {
+  createUpdate,
+  deleteUpdate,
+  getUpdate,
+  getUpdates,
+  updateUpdate,
+} from "./handlers/update";
 
 const router = Router();
 
@@ -40,7 +47,7 @@ router.delete("/product/:id", deleteProduct);
 /**
  * Release routes
  */
-router.get("/release", getReleases);
+router.get("/releases", getReleases);
 router.get("/release/:id", getRelease);
 router.put(
   "/release/:id",
@@ -66,20 +73,39 @@ router.delete("/release/:id", deleteRelease);
 /**
  * Update routes
  */
-router.get("/update", () => {});
-router.get("/update/:id", () => {});
+router.get("/updates", getUpdates);
+router.get("/update/:id", getUpdate);
 router.put(
   "/update/:id",
   body("name").optional().isString(),
   body("description").optional().isString(),
-  () => {}
+  body("type")
+    .optional()
+    .isIn([
+      "BUG_FIX",
+      "NEW_FEATURE",
+      "IMPROVEMENT",
+      "DEPRECATION",
+      "SECURITY_FIX",
+    ]),
+  handleInputErrors,
+  updateUpdate
 );
 router.post(
   "/update/",
   body("name").isString(),
   body("description").isString(),
-  () => {}
+  body("type").isIn([
+    "BUG_FIX",
+    "NEW_FEATURE",
+    "IMPROVEMENT",
+    "DEPRECATION",
+    "SECURITY_FIX",
+  ]),
+  body("releaseId").isString(),
+  handleInputErrors,
+  createUpdate
 );
-router.delete("/update/:id", () => {});
+router.delete("/update/:id", deleteUpdate);
 
 export default router;
