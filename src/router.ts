@@ -8,6 +8,13 @@ import {
   getProducts,
   updateProduct,
 } from "./handlers/product";
+import {
+  createRelease,
+  deleteRelease,
+  getRelease,
+  getReleases,
+  updateRelease,
+} from "./handlers/release";
 
 const router = Router();
 
@@ -33,25 +40,28 @@ router.delete("/product/:id", deleteProduct);
 /**
  * Release routes
  */
-router.get("/release", () => {});
-router.get("/release/:id", () => {});
+router.get("/release", getReleases);
+router.get("/release/:id", getRelease);
 router.put(
   "/release/:id",
   body("title").optional(),
   body("body").optional(),
   body("version").optional(),
   body("status").isIn(["IN_PROGRESS", "SHIPPED", "DEPRECATED"]).optional(),
-  () => {}
+  handleInputErrors,
+  updateRelease
 );
 router.post(
   "/release/",
   body("title").exists(),
   body("body").exists(),
+  body("productId").exists(),
   body("version").optional(),
   body("status").isIn(["IN_PROGRESS", "SHIPPED", "DEPRECATED"]).optional(),
-  () => {}
+  handleInputErrors,
+  createRelease
 );
-router.delete("/release/:id", () => {});
+router.delete("/release/:id", deleteRelease);
 
 /**
  * Update routes
