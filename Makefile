@@ -2,14 +2,29 @@ export
 
 COMPOSE = docker-compose -f docker-compose.yml
 
-dev-build:
+build:
 	$(COMPOSE) build
 
-dev-start:
+start:
 	$(COMPOSE) up -d
 
-dev-stop:
+stop:
+	$(COMPOSE) stop
+
+down:
 	$(COMPOSE) down
 
-dev-prune:
+prune:
 	$(COMPOSE) down --rmi all --volumes --remove-orphans
+
+dev-start:
+	$(COMPOSE) up -d db
+
+dev-stop:
+	$(COMPOSE) stop db
+
+test-start:
+	$(COMPOSE) up -d testdb
+
+test-stop:
+	$(COMPOSE) stop testdb
