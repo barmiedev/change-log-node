@@ -1,14 +1,23 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
+/**
+ * Compares a password with a hash and returns a boolean
+ */
 export const comparePasswords = (password, hash) => {
   return bcrypt.compare(password, hash);
 };
 
+/**
+ * Hashes a password and returns a promise
+ */
 export const hashPassword = (password) => {
   return bcrypt.hash(password, 7);
 };
 
+/**
+ * Creates a JWT and returns it
+ */
 export const createJWT = (user) => {
   const token = jwt.sign(
     { id: user.id, username: user.username },
@@ -17,6 +26,10 @@ export const createJWT = (user) => {
   return token;
 };
 
+/**
+ * Protects a route with JWT
+ * using the Authorization header with the Bearer scheme
+ */
 export const protect = (req, res, next) => {
   const bearer = req.headers.authorization;
   if (!bearer) {
