@@ -1,21 +1,22 @@
 import merge from "lodash/merge";
 
 process.env.NODE_ENV = process.env.NODE_ENV || "development";
-const stage = process.env.STAGE || "local";
+process.env.STAGE = process.env.STAGE || "local";
 
 let envConfig;
 
-if (stage === "production") {
+if (process.env.STAGE === "production") {
   envConfig = require("./production").default;
-} else if (stage === "testing") {
+} else if (process.env.STAGE === "testing") {
   envConfig = require("./testing").default;
 } else {
   envConfig = require("./local").default;
 }
 
+process.env.POSTGRES_PORT = envConfig.postgresPort || process.env.POSTGRES_PORT;
+
 export default merge(
   {
-    stage,
     env: process.env.NODE_ENV,
     port: 3001,
     secrets: {

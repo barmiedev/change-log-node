@@ -1,3 +1,1 @@
-export default {
-  port: 5000,
-};
+export default {};
